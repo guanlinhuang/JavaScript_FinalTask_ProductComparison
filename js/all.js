@@ -163,7 +163,7 @@ buttonGroup.addEventListener('click', function (e) {
     searchText.value = ''; //搜尋欄位清空
 
     //加屬性active，可使按鈕背景常亮
-    document.querySelectorAll(".btn-type").forEach(function (item, index) {
+    document.querySelectorAll(".btn").forEach(function (item, index) {
       item.classList.remove("active");
     });
     e.target.classList.add("active");
@@ -180,22 +180,3 @@ buttonGroup.addEventListener('click', function (e) {
     }
   }
 })
-
-
-// const button = document.querySelectorAll('.button-group button')
-// button.forEach((item) => {
-//   item.addEventListener('click', (e) => {
-//     if (e.target.nodeName !== "BUTTON") {
-//       // alert("你沒點到喔")
-//     } else {
-//       // 預設清除所有元素的class
-//       button.forEach(item => {
-//         item.classList.remove('active');
-//         console.log('active')
-//       });
-//       // class附加到被點擊的元素上
-//       item.classList.add('active');
-//       // this.classList.add('active');
-//     }
-//   })
-// })
