@@ -34,8 +34,6 @@ function renderData(showData) {
   showList.innerHTML = str; //6.渲染到showList
 }
 
-
-
 //二、撰寫排順code
 //點擊到符合條件的DOM元素所在位置，將執行排順
 //適用於第一列點擊上下箭頭
@@ -102,12 +100,18 @@ function FilterSortData(sortPrice, sortCaret) {
 
 
 
-//三、撰寫搜尋功能code
+//三、搜尋功能
 const search = document.querySelector(".seach-group");
 const searchText = document.querySelector("#crop");
 search.addEventListener('keypress', function (e) {
   if (e.key == 'Enter') {
     searchData();
+
+    //按下enter鍵後，篩選農產品種類active清除(背景清除)
+    document.querySelectorAll(".btn").forEach(function (item, index) {
+      item.classList.remove("active");
+    });
+
     console.log('鍵盤enter鍵')
   }
 })
@@ -115,26 +119,42 @@ search.addEventListener('keypress', function (e) {
 search.addEventListener('click', function (e) {//監聽點擊事件
   if (e.target.getAttribute('type') == "button") {//點擊到button 搜尋按鈕
     searchData();
+
+    //點擊搜尋按鈕後，篩選農產品種類active清除(背景清除)
+    document.querySelectorAll(".btn").forEach(function (item, index) {
+      item.classList.remove("active");
+    });
+
     console.log('滑鼠點擊')
   }
 })
 
 //輸入欄位清空，重新渲染全部資料
 searchText.addEventListener('keydown', function (e) {
-  if (searchText.value.length == 1) {
-    filterData = '' //篩選資料也順便清空，沒清空，篩選資料永遠在，將無法排順全部資料
+  //需符合三個條件，才會執行
+  if (e.key == 'Backspace' && searchText.value.length == 1 && filterData.length == 0) {
+    filterData = '' //篩選資料也順便清空，若沒清空，篩選資料永遠在，將無法排順全部資料
     renderData(newData) //重新初始化
     console.log('鍵盤事件已執行')
+    
+    //重新初始化的同時，幫「全部」按鈕加上active（背景常亮）
+    document.querySelectorAll(".allBtn").forEach(function (item, index) {
+      item.classList.add("active");
+    });
+
   }
+
 });
+
+//searchText.value.length <= 1
 
 let filterData = []; //篩選出的資料放這裡
 function searchData() {
   filterData = newData.filter((item) => { //搜尋符合一個字以上，跳出相對應的資料
     //filter() 根據你指定的測試函數，從一個陣列中篩選出符合條件的元素
-    //match() 當輸入的文字有部分相符，會把該產品列出來
     if (item.作物名稱 != null) {
       return item.作物名稱.match(searchText.value.trim());
+      // match() 當輸入的文字有部分相符，會把該產品列出來
     }
     // console.log('執行1')
   })
@@ -168,7 +188,7 @@ buttonGroup.addEventListener('click', function (e) {
     });
     e.target.classList.add("active");
 
-    
+
     if (e.target.dataset.type !== "all") { //點擊「全部」之外的按鈕，篩選出相對應的種類資料
       let type = e.target.dataset.type;
       filterData = newData.filter((item) => { return item.種類代碼 === type });
@@ -180,3 +200,5 @@ buttonGroup.addEventListener('click', function (e) {
     }
   }
 })
+
+
