@@ -168,6 +168,12 @@ body {
 
 
 //自定義
-.btn .active{
+.btn.active{
   background: #f8d45a;
   }  
+// 這比較特別，.btn跟.active之間不需空一格，因為.btn跟.active是同一階層
+// 例如 <div class="btn active">
+
+// 如是對應到上下層的階層選取關係，則需空一格
+// 例如 <div class="btn" />
+//       <div class="active" />
