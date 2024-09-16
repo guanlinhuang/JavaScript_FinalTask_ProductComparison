@@ -2,22 +2,27 @@
 //撈取資料函式 //初始化
 let newData = []; //1.宣告變數跟空陣列 
 function getData() {
-  //let newData = []; //1.宣告變數跟空陣列 //也可放這裡，但因為外層有別的函式需套用newData，所以將newData移到外層，亦不影響運作 
+  //let newData = []; //1.宣告變數跟空陣列 //本來放這裡，但因為外層有別的函式需套用newData，所以將newData移到外層，亦不影響運作 
   axios.get('https://hexschool.github.io/js-filter-data/data.json', newData)
     .then(function (response) {
-      newData = response.data; //2.往外層找newData，並載入json資料
-      //console.log(newData); //3.檢查有沒有成功載入
+      // newData = response.data; //2.往外層找newData，並載入json資料
+      // //console.log(newData); //3.檢查有沒有成功載入
+      // renderData(newData); //7.執行渲染函式
+
+      newData = response.data.filter(function (item) { //2.將空值或null過濾掉，並往外層找newData，然後載入json資料
+        return item.作物名稱 !== '' && item.作物名稱 !== null
+      })
+      console.log(newData) //3.檢查有沒有成功載入
       renderData(newData); //7.執行渲染函式
     })
     .catch(function (err) {
       console.log(err);
     })
 }
-
 getData() //8.執行撈取資料函式
 
 //渲染函式
-const showList = document.querySelector(".showList"); //4.選取showList
+const showList = document.querySelector(".showList"); //4.選取class屬性 -showList
 function renderData(showData) {
   let str = "";
   showData.forEach(function (item) { //5.將篩選出的每一個newData加入str
@@ -33,6 +38,7 @@ function renderData(showData) {
   });
   showList.innerHTML = str; //6.渲染到showList
 }
+
 
 //二、撰寫排順code
 //點擊到符合條件的DOM元素所在位置，將執行排順
@@ -104,7 +110,7 @@ function FilterSortData(sortPrice, sortCaret) {
 const search = document.querySelector(".seach-group");
 const searchText = document.querySelector("#crop");
 search.addEventListener('keypress', function (e) {
-  if (e.key == 'Enter') {
+  if (e.key === 'Enter') {
     searchData();
 
     //按下enter鍵後，篩選農產品種類active清除(背景清除)
@@ -112,12 +118,12 @@ search.addEventListener('keypress', function (e) {
       item.classList.remove("active");
     });
 
-    console.log('鍵盤enter鍵')
+    // console.log('鍵盤enter鍵')
   }
 })
 
 search.addEventListener('click', function (e) {//監聽點擊事件
-  if (e.target.getAttribute('type') == "button") {//點擊到button 搜尋按鈕
+  if (e.target.getAttribute('type') === "button") {//點擊到button 搜尋按鈕
     searchData();
 
     //點擊搜尋按鈕後，篩選農產品種類active清除(背景清除)
@@ -125,18 +131,18 @@ search.addEventListener('click', function (e) {//監聽點擊事件
       item.classList.remove("active");
     });
 
-    console.log('滑鼠點擊')
+    // console.log('滑鼠點擊')
   }
 })
 
 //輸入欄位清空，重新渲染全部資料
 searchText.addEventListener('keydown', function (e) {
   //需符合三個條件，才會執行
-  if (e.key == 'Backspace' && searchText.value.length == 1 && filterData.length == 0) {
+  if (e.key === 'Backspace' && searchText.value.length === 1 && filterData.length === 0) {
     filterData = '' //篩選資料也順便清空，若沒清空，篩選資料永遠在，將無法排順全部資料
     renderData(newData) //重新初始化
     console.log('鍵盤事件已執行')
-    
+
     //重新初始化的同時，幫「全部」按鈕加上active（背景常亮）
     document.querySelectorAll(".allBtn").forEach(function (item, index) {
       item.classList.add("active");
@@ -163,12 +169,12 @@ function searchData() {
 
 
 
-  if (searchText.value == "") { //輸入欄位空白，跳出警告視窗
+  if (searchText.value === "") { //輸入欄位空白，跳出警告視窗
     alert("請輸入作物名稱！");
     // console.log('執行2')
     return;
   }
-  else if (filterData.length == 0) { //filterData無資料，即查無資料，渲染抱歉文字訊息
+  else if (filterData.length === 0) { //filterData無資料，即查無資料，渲染抱歉文字訊息
     showList.innerHTML = '<tr><td colspan="7" class="text-center p-3">很抱歉！查無交易資訊！</td></tr>'
     // console.log('執行3')
   }
@@ -179,7 +185,7 @@ function searchData() {
 //四、篩選農產品種類
 const buttonGroup = document.querySelector('.button-group')
 buttonGroup.addEventListener('click', function (e) {
-  if (e.target.nodeName == "BUTTON") { //點擊到按鈕的HTML標籤位置，執行以下code
+  if (e.target.nodeName === "BUTTON") { //點擊到按鈕的HTML標籤位置，執行以下code
     searchText.value = ''; //搜尋欄位清空
 
     //加屬性active，可使按鈕背景常亮
