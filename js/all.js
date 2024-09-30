@@ -158,7 +158,7 @@ let filterData = []; //篩選出的資料放這裡
 function searchData() {
   filterData = newData.filter((item) => { //搜尋符合一個字以上，跳出相對應的資料
     //filter() 根據你指定的測試函數，從一個陣列中篩選出符合條件的元素
-    if (item.作物名稱 != null) {
+    if (item.作物名稱 !== null) {
       return item.作物名稱.match(searchText.value.trim());
       // match() 當輸入的文字有部分相符，會把該產品列出來
     }
